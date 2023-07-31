@@ -1,9 +1,9 @@
 package com.irby.jaden.resturantreview.user.service;
 
+import com.irby.jaden.resturantreview.domain.core.exceptions.UserExecption;
 import com.irby.jaden.resturantreview.domain.core.review.model.Review;
 import com.irby.jaden.resturantreview.domain.core.user.model.UserEntity;
 import com.irby.jaden.resturantreview.domain.core.user.repo.UserRepo;
-import com.irby.jaden.resturantreview.domain.core.user.service.UserService;
 import com.irby.jaden.resturantreview.domain.core.user.service.UserServiceImpl;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -17,6 +17,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 @ExtendWith(MockitoExtension.class)
 public class UserServiceTest {
@@ -62,11 +63,49 @@ public class UserServiceTest {
         mockResponseUser2.setId(2);
     }
 
-        @Test
-        public void createUserTestSuccess(){
-            BDDMockito.doReturn(mockResponseUser1).when(mockUserRepo).save(ArgumentMatchers.any());
-            UserEntity returnedUser = userService.create(inputUser);
-            Assertions.assertNotNull(returnedUser, "User Should not be null");
-            Assertions.assertEquals(returnedUser.getId(), 1);
-        }
+    @Test
+    public void createUserTestSuccess(){
+        BDDMockito.doReturn(mockResponseUser1).when(mockUserRepo).save(ArgumentMatchers.any());
+        UserEntity returnedUser = userService.create(inputUser);
+        Assertions.assertNotNull(returnedUser, "User Should not be null");
+        Assertions.assertEquals(returnedUser.getId(), 1);
+    }
+    @Test
+    public void getUserByIdSuccess() throws UserExecption {
+        BDDMockito.doReturn(Optional.of(mockResponseUser1)).when(mockUserRepo).findById(1);
+        UserEntity foundUser = userService.getUserById(1);
+        Assertions.assertEquals(mockResponseUser1.toString(), foundUser.toString());
+
+    }
+    @Test
+    public void getUserByIdFailed(){
+        BDDMockito.doReturn(Optional.empty()).when(mockUserRepo).findById(1);
+        Assertions.assertThrows(UserExecption.class, () ->{
+            userService.getUserById(1);
+        });
+
+    }
+    @Test
+    public void getAllUserSuccess(){
+        List<UserEntity> userList = new ArrayList<>();
+        userList.add(mockResponseUser1);
+        userList.add(mockResponseUser2);
+
+        BDDMockito.doReturn(userList).when(mockUserRepo).findAll();
+
+        List<UserEntity> responseUsers = userService.getAllUsers();
+        Assertions.assertIterableEquals(userList, responseUsers);
+    }
+    @Test
+    public void updateUserSuccess(){
+        List<Review> reviewList = new ArrayList<>();
+
+        reviewList.add(new Review("title","content", 1,1L,1L));
+        reviewList.add(new Review("title2","content2", 5,1L,1L));
+
+        UserEntity execptedUser = new UserEntity("Joe", "Boat", "example", 'com.exmaple' )
+        BDDMockito.doReturn(Optional.of(mockResponseUser1)).when(mockUserRepo).findById(1);
+        BDDMockito.doReturn()
+
+    }
 }
