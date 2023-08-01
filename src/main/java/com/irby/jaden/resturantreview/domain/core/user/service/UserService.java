@@ -1,15 +1,15 @@
 package com.irby.jaden.resturantreview.domain.core.user.service;
 
 import com.irby.jaden.resturantreview.domain.core.exceptions.UserExecption;
-import com.irby.jaden.resturantreview.domain.core.user.model.UserEntity;
+import com.irby.jaden.resturantreview.domain.core.user.model.User;
 
 import java.util.List;
 
 public interface UserService {
-    UserEntity create(UserEntity user);
-    UserEntity getUserById(Integer id) throws UserExecption;
-    List<UserEntity> getAllUsers();
-    UserEntity updateUser(Integer id, UserEntity user) throws UserExecption;
-    Boolean deleteUser(Integer id) throws UserExecption;
+    User createUser(User user);
+    User getUserById(Long id) throws UserExecption;
+    List<User> getAllUsers();
+    User updateUser(Long id, User user) throws UserExecption;
+    Boolean deleteUser(Long id) throws UserExecption;
 
 }

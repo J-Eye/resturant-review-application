@@ -1,8 +1,7 @@
 package com.irby.jaden.resturantreview.user.service;
 
 import com.irby.jaden.resturantreview.domain.core.exceptions.UserExecption;
-import com.irby.jaden.resturantreview.domain.core.review.model.Review;
-import com.irby.jaden.resturantreview.domain.core.user.model.UserEntity;
+import com.irby.jaden.resturantreview.domain.core.user.model.User;
 import com.irby.jaden.resturantreview.domain.core.user.repo.UserRepo;
 import com.irby.jaden.resturantreview.domain.core.user.service.UserServiceImpl;
 import org.junit.jupiter.api.Assertions;
@@ -28,84 +27,94 @@ public class UserServiceTest {
     @InjectMocks
     private UserServiceImpl userService;
 
-    private UserEntity inputUser;
-    private UserEntity mockResponseUser1;
-    private UserEntity mockResponseUser2;
+    private User inputUser;
+    private User mockResponseUser1;
+    private User mockResponseUser2;
 
     private Date date;
 
-    private List<Review> reviews;
-
-    @Mock
-    private Review review1;
-
-    @Mock
-    private Review review2;
-
     @BeforeEach
     public void setUp() throws ParseException {
-
-        reviews = new ArrayList<>();
-        reviews.add(review1);
-        reviews.add(review2);
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         date = sdf.parse("2022-01-15 12:30:45");
 
-        inputUser = new UserEntity("John", "Doe","JonDoe123", date,"Jon@Doe.com");
-        inputUser.setReviews(reviews);
+        inputUser = new User("John", "Doe","JonDoe123", date,"Jon@Doe.com");
 
-        mockResponseUser1 = new UserEntity();
-        mockResponseUser1.setReviews(reviews);
+        mockResponseUser1 = new User();
         mockResponseUser1.setId(1);
 
-        mockResponseUser2 = new UserEntity();
-        mockResponseUser2.setReviews(reviews);
+        mockResponseUser2 = new User();
         mockResponseUser2.setId(2);
     }
 
     @Test
     public void createUserTestSuccess(){
         BDDMockito.doReturn(mockResponseUser1).when(mockUserRepo).save(ArgumentMatchers.any());
-        UserEntity returnedUser = userService.create(inputUser);
+        User returnedUser = userService.createUser(inputUser);
         Assertions.assertNotNull(returnedUser, "User Should not be null");
         Assertions.assertEquals(returnedUser.getId(), 1);
     }
     @Test
     public void getUserByIdSuccess() throws UserExecption {
-        BDDMockito.doReturn(Optional.of(mockResponseUser1)).when(mockUserRepo).findById(1);
-        UserEntity foundUser = userService.getUserById(1);
+        BDDMockito.doReturn(Optional.of(mockResponseUser1)).when(mockUserRepo).findById(1L);
+        User foundUser = userService.getUserById(1L);
         Assertions.assertEquals(mockResponseUser1.toString(), foundUser.toString());
 
     }
     @Test
     public void getUserByIdFailed(){
-        BDDMockito.doReturn(Optional.empty()).when(mockUserRepo).findById(1);
+        BDDMockito.doReturn(Optional.empty()).when(mockUserRepo).findById(1L);
         Assertions.assertThrows(UserExecption.class, () ->{
-            userService.getUserById(1);
+            userService.getUserById(1L);
         });
 
     }
     @Test
     public void getAllUserSuccess(){
-        List<UserEntity> userList = new ArrayList<>();
+        List<User> userList = new ArrayList<>();
         userList.add(mockResponseUser1);
         userList.add(mockResponseUser2);
 
         BDDMockito.doReturn(userList).when(mockUserRepo).findAll();
 
-        List<UserEntity> responseUsers = userService.getAllUsers();
+        List<User> responseUsers = userService.getAllUsers();
         Assertions.assertIterableEquals(userList, responseUsers);
     }
     @Test
-    public void updateUserSuccess(){
-        List<Review> reviewList = new ArrayList<>();
+    public void updateUserSuccess() throws UserExecption {
 
-        reviewList.add(new Review("title","content", 1,1L,1L));
-        reviewList.add(new Review("title2","content2", 5,1L,1L));
+        User execptedUser = new User("Joe", "Boat", "example", date, "J@example.com" );
+        BDDMockito.doReturn(Optional.of(mockResponseUser1)).when(mockUserRepo).findById(1L);
+        BDDMockito.doReturn(execptedUser).when(mockUserRepo).save(ArgumentMatchers.any());
 
-        UserEntity execptedUser = new UserEntity("Joe", "Boat", "example", 'com.exmaple' )
-        BDDMockito.doReturn(Optional.of(mockResponseUser1)).when(mockUserRepo).findById(1);
-        BDDMockito.doReturn()
+        User actualUser = userService.updateUser(1L, execptedUser);
+        Assertions.assertEquals(actualUser.toString(), execptedUser.toString());
 
+    }
+
+    @Test
+    public void updateUserFail() {
+
+
+        User execptedUser = new User("Joe", "Boat", "example", date, "J@example.com" );
+        BDDMockito.doReturn(Optional.empty()).when(mockUserRepo).findById(1L);
+        Assertions.assertThrows(UserExecption.class, () ->{
+            userService.updateUser(1L, execptedUser);
+        });
+    }
+
+    @Test
+    public void deleteUserSuccess() throws UserExecption {
+        BDDMockito.doReturn(Optional.of(mockResponseUser1)).when(mockUserRepo).findById(1L);
+        Boolean actualResponse = userService.deleteUser(1L);
+        Assertions.assertTrue(actualResponse);
+    }
+
+    @Test
+    public void deleteUserFail(){
+        BDDMockito.doReturn(Optional.empty()).when(mockUserRepo).findById(1L);
+        Assertions.assertThrows(UserExecption.class, () -> {
+            userService.deleteUser(1L);
+        });
     }
 }

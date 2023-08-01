@@ -1,17 +1,12 @@
 package com.irby.jaden.resturantreview.domain.core.user.model;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-import com.irby.jaden.resturantreview.domain.core.review.model.Review;
 import jakarta.persistence.*;
 
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 @Entity
-public class UserEntity {
+@Table(name = "users")
+public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,13 +22,11 @@ public class UserEntity {
 
     private String email;
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Review> reviews = new ArrayList<>();
 
-    public UserEntity() {
+    public User() {
     }
 
-    public UserEntity(String firstName, String lastName, String userName, Date createdAt, String email) {
+    public User(String firstName, String lastName, String userName, Date createdAt, String email) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.userName = userName;
@@ -89,15 +82,6 @@ public class UserEntity {
         this.email = email;
     }
 
-    public List<Review> getReviews() {
-        return reviews;
-    }
-
-    public void setReviews(List<Review> reviews) {
-        this.reviews = reviews;
-    }
-
-
     @Override
     public String toString() {
         return "UserEntity{" +
@@ -107,7 +91,6 @@ public class UserEntity {
                 ", userName='" + userName + '\'' +
                 ", createdAt=" + createdAt +
                 ", email='" + email + '\'' +
-                ", reviews=" + reviews +
                 '}';
     }
 }

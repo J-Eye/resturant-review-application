@@ -20,8 +20,8 @@ public class Restaurant {
 
     private String address;
 
-
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL)
+    @JsonManagedReference
     private List<Review> reviews = new ArrayList<>();
 
     public Restaurant(){
@@ -58,7 +58,6 @@ public class Restaurant {
         this.address = address;
     }
 
-
     public List<Review> getReviews() {
         return reviews;
     }
@@ -73,6 +72,7 @@ public class Restaurant {
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", address='" + address + '\'' +
+                ", reviews=" + reviews +
                 '}';
     }
 }

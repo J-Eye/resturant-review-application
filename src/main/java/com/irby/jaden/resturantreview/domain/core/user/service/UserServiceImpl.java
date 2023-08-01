@@ -1,7 +1,7 @@
 package com.irby.jaden.resturantreview.domain.core.user.service;
 
 import com.irby.jaden.resturantreview.domain.core.exceptions.UserExecption;
-import com.irby.jaden.resturantreview.domain.core.user.model.UserEntity;
+import com.irby.jaden.resturantreview.domain.core.user.model.User;
 import com.irby.jaden.resturantreview.domain.core.user.repo.UserRepo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,25 +22,25 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public UserEntity create(UserEntity user) {
-        UserEntity createdUser = userRepo.save(user);
+    public User createUser(User user) {
+        User createdUser = userRepo.save(user);
         return createdUser;
     }
 
     @Override
-    public UserEntity getUserById(Integer id) throws UserExecption {
-        UserEntity user = findUser(id);
+    public User getUserById(Long id) throws UserExecption {
+        User user = findUser(id);
         return user;
     }
 
     @Override
-    public List<UserEntity> getAllUsers() {
+    public List<User> getAllUsers() {
         return  userRepo.findAll();
     }
 
     @Override
-    public UserEntity updateUser(Integer id, UserEntity user) throws UserExecption {
-        UserEntity saveUser = findUser(id);
+    public User updateUser(Long id, User user) throws UserExecption {
+        User saveUser = findUser(id);
 
         saveUser.setFirstName(user.getFirstName());
         saveUser.setLastName(user.getLastName());
@@ -50,14 +50,14 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public Boolean deleteUser(Integer id) throws UserExecption {
-        UserEntity user = findUser(id);
+    public Boolean deleteUser(Long id) throws UserExecption {
+        User user = findUser(id);
         userRepo.delete(user);
         return true;
     }
 
-    private UserEntity findUser(Integer id) throws UserExecption{
-        Optional<UserEntity> optionalUser = userRepo.findById(id);
+    private User findUser(Long id) throws UserExecption{
+        Optional<User> optionalUser = userRepo.findById(id);
         if(optionalUser.isEmpty()){
             log.error("User with id {} does not exist", id);
             throw new UserExecption("User not found");

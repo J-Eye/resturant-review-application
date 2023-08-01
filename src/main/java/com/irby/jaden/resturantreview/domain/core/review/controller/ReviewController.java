@@ -25,10 +25,12 @@ public class ReviewController {
     }
 
     @PostMapping("")
-    public ResponseEntity<Review> createReview(@RequestBody Review review, @RequestParam Integer userId, @RequestParam Integer restaurantId) throws UserExecption, ResturantException {
-        Review createdReview  = reviewService.CreateReview(userId,restaurantId,review);
+    public ResponseEntity<Review> createReview(@RequestBody Review review) {
+        Review createdReview  = reviewService.CreateReview(review);
         return new ResponseEntity<>(createdReview, HttpStatus.CREATED);
     }
+
+
 
 
 }

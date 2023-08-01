@@ -1,5 +1,8 @@
 package com.irby.jaden.resturantreview.domain.core.review.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.irby.jaden.resturantreview.domain.core.resturant.model.Restaurant;
+import com.irby.jaden.resturantreview.domain.core.user.model.User;
 import jakarta.persistence.*;
 
 @Entity
@@ -14,22 +17,23 @@ public class Review {
 
     private int rating;
 
-    @JoinColumn(name = "UserEntity_id")
-    private Long userId;
+    @ManyToOne
+    @JsonBackReference
+    private Restaurant restaurant;
 
-    @JoinColumn(name = "restaurant_id")
-    private Long restaurnatId;
-
+    @ManyToOne
+    private User user;
 
     public Review() {
     }
 
-    public Review(String title, String content, int rating, Long userId, Long restaurnatId) {
+    public Review(Long id, String title, String content, int rating, Restaurant restaurant, User user) {
+        this.id = id;
         this.title = title;
         this.content = content;
         this.rating = rating;
-        this.userId = userId;
-        this.restaurnatId = restaurnatId;
+        this.restaurant = restaurant;
+        this.user = user;
     }
 
     public Long getId() {
@@ -64,20 +68,20 @@ public class Review {
         this.rating = rating;
     }
 
-    public Long getUserId() {
-        return userId;
+    public Restaurant getRestaurant() {
+        return restaurant;
     }
 
-    public void setUserId(Long userId) {
-        this.userId = userId;
+    public void setRestaurant(Restaurant restaurant) {
+        this.restaurant = restaurant;
     }
 
-    public Long getRestaurnatId() {
-        return restaurnatId;
+    public User getUser() {
+        return user;
     }
 
-    public void setRestaurnatId(Long restaurnatId) {
-        this.restaurnatId = restaurnatId;
+    public void setUser(User user) {
+        this.user = user;
     }
 
     @Override
@@ -87,8 +91,8 @@ public class Review {
                 ", title='" + title + '\'' +
                 ", content='" + content + '\'' +
                 ", rating=" + rating +
-                ", userId=" + userId +
-                ", restaurnatId=" + restaurnatId +
+                ", restaurant=" + restaurant +
+                ", user=" + user +
                 '}';
     }
 }

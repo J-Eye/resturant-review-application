@@ -1,7 +1,7 @@
 package com.irby.jaden.resturantreview.user.model;
 
 import com.irby.jaden.resturantreview.domain.core.review.model.Review;
-import com.irby.jaden.resturantreview.domain.core.user.model.UserEntity;
+import com.irby.jaden.resturantreview.domain.core.user.model.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -13,33 +13,20 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class userEntityTest {
+public class UserTest {
 
-    private UserEntity user;
+    private User user;
 
-    private UserEntity emptyUser;
+    private User emptyUser;
 
     private Date date;
 
-    private List<Review> reviews;
-
-    @Mock
-    private Review review1;
-
-    @Mock
-    private Review review2;
-
     @BeforeEach
     public void setUp() throws ParseException {
-        emptyUser = new UserEntity();
-
-        reviews = new ArrayList<>();
-        reviews.add(review1);
-        reviews.add(review2);
+        emptyUser = new User();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         date = sdf.parse("2022-01-15 12:30:45");
-        user = new UserEntity("John", "Doe","JonDoe123", date,"Jon@Doe.com");
-        user.setReviews(reviews);
+        user = new User("John", "Doe","JonDoe123", date,"Jon@Doe.com");
     }
 
     @Test
@@ -51,7 +38,6 @@ public class userEntityTest {
                 ", userName='JonDoe123" +'\'' +
                 ", createdAt=" +date  +
                 ", email='Jon@Doe.com" + '\'' +
-                ", reviews=" + reviews +
                 '}';
         assertEquals(expected, user.toString());
     }
