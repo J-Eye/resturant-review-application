@@ -1,6 +1,8 @@
 package com.irby.jaden.resturantreview.domain.core.resturant.controller;
 
-import com.irby.jaden.resturantreview.domain.core.exceptions.ResturantException;
+import com.irby.jaden.resturantreview.domain.core.BaseController;
+import com.irby.jaden.resturantreview.domain.core.exceptions.BadRequestException;
+import com.irby.jaden.resturantreview.domain.core.exceptions.ResturantNotFoundException;
 import com.irby.jaden.resturantreview.domain.core.resturant.model.Restaurant;
 import com.irby.jaden.resturantreview.domain.core.resturant.service.RestaurantService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,17 +15,17 @@ import java.util.List;
 @RestController
 @RequestMapping("/restaurant")
 @CrossOrigin("*")
-public class ResturantController {
+public class RestaurantController extends BaseController {
 
     private RestaurantService restaurantService;
 
     @Autowired
-    public ResturantController(RestaurantService restaurantService){
+    public RestaurantController(RestaurantService restaurantService){
         this.restaurantService = restaurantService;
     }
 
     @PostMapping("")
-    public ResponseEntity<Restaurant> createRestaurant(@RequestBody Restaurant restaurant){
+    public ResponseEntity<Restaurant> createRestaurant(@RequestBody Restaurant restaurant) throws BadRequestException {
         Restaurant savedRestaurant = restaurantService.createRestaurant(restaurant);
         return new ResponseEntity<>(savedRestaurant, HttpStatus.CREATED);
     }
@@ -35,20 +37,24 @@ public class ResturantController {
     }
 
     @GetMapping("{id}")
-    public ResponseEntity<Restaurant> getRestaurantById(@RequestParam Long id) throws ResturantException {
-        Restaurant restaurant = restaurantService.getRestaurantById(id);
+    public ResponseEntity<Restaurant> getRestaurantById(@PathVariable String id) throws ResturantNotFoundException, BadRequestException {
+        long restaurantId = validateId(id);
+        Restaurant restaurant = restaurantService.getRestaurantById(restaurantId);
         return new ResponseEntity<>(restaurant, HttpStatus.OK);
     }
 
     @PutMapping("{id}")
-    public ResponseEntity<Restaurant> updateRestaurant(@RequestBody Restaurant restaurant, @RequestParam Long id) throws ResturantException {
-        Restaurant updatedRestaurant = restaurantService.updateRestaurant(id, restaurant);
+    public ResponseEntity<Restaurant> updateRestaurant(@RequestBody Restaurant restaurant, @PathVariable String id) throws ResturantNotFoundException, BadRequestException {
+        long restaurantId = validateId(id);
+
+        Restaurant updatedRestaurant = restaurantService.updateRestaurant(restaurantId, restaurant);
         return new ResponseEntity<>(updatedRestaurant, HttpStatus.OK);
     }
 
     @DeleteMapping("{id}")
-    public ResponseEntity<Boolean> deleteRestaurant(@RequestParam Long id) throws ResturantException {
-        Boolean result = restaurantService.deleteRestaurant(id);
+    public ResponseEntity<Boolean> deleteRestaurant(@PathVariable String id) throws ResturantNotFoundException, BadRequestException {
+        long restaurantId = validateId(id);
+        Boolean result = restaurantService.deleteRestaurant(restaurantId);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 

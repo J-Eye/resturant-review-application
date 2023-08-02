@@ -1,13 +1,17 @@
 package com.irby.jaden.resturantreview.domain.core.review.service;
 
-import com.irby.jaden.resturantreview.domain.core.exceptions.ResturantException;
-import com.irby.jaden.resturantreview.domain.core.exceptions.ReviewExecption;
-import com.irby.jaden.resturantreview.domain.core.exceptions.UserExecption;
+import com.irby.jaden.resturantreview.domain.core.exceptions.BadRequestException;
+import com.irby.jaden.resturantreview.domain.core.exceptions.ResturantNotFoundException;
+import com.irby.jaden.resturantreview.domain.core.exceptions.ReviewNotFoundExecption;
+import com.irby.jaden.resturantreview.domain.core.exceptions.UserNotFoundException;
 import com.irby.jaden.resturantreview.domain.core.review.model.Review;
+import com.irby.jaden.resturantreview.domain.core.user.model.User;
+
+import java.util.List;
 
 public interface ReviewService {
 
-    Review CreateReview(Review review);
-    Review UpdateReview(Long reviewId, Review review) throws UserExecption, ResturantException, ReviewExecption;
-    Boolean deleteReview(Long id) throws ResturantException, ReviewExecption;
+    Review createReview(Review review) throws BadRequestException;
+    Review updateReview(Long reviewId, Review review) throws ReviewNotFoundExecption, BadRequestException;
+    Boolean deleteReview(Long id) throws ReviewNotFoundExecption;
 }

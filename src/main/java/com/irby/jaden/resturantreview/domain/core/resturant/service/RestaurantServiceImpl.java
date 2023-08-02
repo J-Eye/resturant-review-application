@@ -1,6 +1,7 @@
 package com.irby.jaden.resturantreview.domain.core.resturant.service;
 
-import com.irby.jaden.resturantreview.domain.core.exceptions.ResturantException;
+import com.irby.jaden.resturantreview.domain.core.exceptions.BadRequestException;
+import com.irby.jaden.resturantreview.domain.core.exceptions.ResturantNotFoundException;
 import com.irby.jaden.resturantreview.domain.core.resturant.model.Restaurant;
 import com.irby.jaden.resturantreview.domain.core.resturant.repo.ResturantRepo;
 import lombok.extern.slf4j.Slf4j;
@@ -28,22 +29,23 @@ public class RestaurantServiceImpl implements RestaurantService {
 
 
     @Override
-    public Restaurant createRestaurant(Restaurant restaurant) {
+    public Restaurant createRestaurant(Restaurant restaurant) throws BadRequestException {
+        validateRestaurant(restaurant);
         Restaurant createdRestruant = resturantRepo.save(restaurant);
         return createdRestruant;
     }
 
     @Override
-    public Restaurant updateRestaurant(Long id, Restaurant restaurant) throws ResturantException {
+    public Restaurant updateRestaurant(Long id, Restaurant restaurant) throws ResturantNotFoundException, BadRequestException {
+        validateRestaurant(restaurant);
         Restaurant restaurantUpdate = findRestaurant(id);
         restaurantUpdate.setAddress(restaurant.getAddress());
         restaurantUpdate.setName(restaurant.getName());
-        System.out.println("SPRINGGGGGGG");
         return resturantRepo.save(restaurantUpdate);
     }
 
     @Override
-    public Boolean deleteRestaurant(Long id) throws ResturantException {
+    public Boolean deleteRestaurant(Long id) throws ResturantNotFoundException {
         Restaurant restaurant = findRestaurant(id);
         resturantRepo.delete(restaurant);
         return true;
@@ -51,17 +53,24 @@ public class RestaurantServiceImpl implements RestaurantService {
     }
 
     @Override
-    public Restaurant getRestaurantById(Long id) throws ResturantException {
+    public Restaurant getRestaurantById(Long id) throws ResturantNotFoundException {
         Restaurant restaurant = findRestaurant(id);
         return restaurant;
     }
 
-    private Restaurant findRestaurant(Long id) throws ResturantException {
+    private Restaurant findRestaurant(Long id) throws ResturantNotFoundException {
         Optional<Restaurant> restaurantOptional = resturantRepo.findById(id);
         if(restaurantOptional.isEmpty()){
             log.error("Review with id {} does not exist", id);
-            throw new ResturantException("Review not found");
+            throw new ResturantNotFoundException("Review not found");
         }
         return restaurantOptional.get();
+    }
+
+    private void validateRestaurant(Restaurant restaurant) throws BadRequestException {
+        if(restaurant.getReviews() == null ||
+                restaurant.getName() == null){
+            throw new BadRequestException("Restaurant is missing required fields:"+ restaurant);
+        }
     }
 }

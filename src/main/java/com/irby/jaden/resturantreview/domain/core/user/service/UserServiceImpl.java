@@ -1,6 +1,7 @@
 package com.irby.jaden.resturantreview.domain.core.user.service;
 
-import com.irby.jaden.resturantreview.domain.core.exceptions.UserExecption;
+import com.irby.jaden.resturantreview.domain.core.exceptions.BadRequestException;
+import com.irby.jaden.resturantreview.domain.core.exceptions.UserNotFoundException;
 import com.irby.jaden.resturantreview.domain.core.user.model.User;
 import com.irby.jaden.resturantreview.domain.core.user.repo.UserRepo;
 import lombok.extern.slf4j.Slf4j;
@@ -22,13 +23,14 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public User createUser(User user) {
+    public User createUser(User user) throws BadRequestException {
+        validateUser(user);
         User createdUser = userRepo.save(user);
         return createdUser;
     }
 
     @Override
-    public User getUserById(Long id) throws UserExecption {
+    public User getUserById(Long id) throws UserNotFoundException {
         User user = findUser(id);
         return user;
     }
@@ -39,9 +41,9 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public User updateUser(Long id, User user) throws UserExecption {
+    public User updateUser(Long id, User user) throws UserNotFoundException, BadRequestException {
         User saveUser = findUser(id);
-
+        validateUser(user);
         saveUser.setFirstName(user.getFirstName());
         saveUser.setLastName(user.getLastName());
         saveUser.setUserName(user.getUserName());
@@ -50,18 +52,29 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public Boolean deleteUser(Long id) throws UserExecption {
+    public Boolean deleteUser(Long id) throws UserNotFoundException {
         User user = findUser(id);
         userRepo.delete(user);
         return true;
     }
 
-    private User findUser(Long id) throws UserExecption{
+    private User findUser(Long id) throws UserNotFoundException {
         Optional<User> optionalUser = userRepo.findById(id);
+
         if(optionalUser.isEmpty()){
             log.error("User with id {} does not exist", id);
-            throw new UserExecption("User not found");
+            throw new UserNotFoundException("User not found");
         };
         return optionalUser.get();
+    }
+
+    private void validateUser(User user) throws BadRequestException {
+        if(user.getUserName() == null ||
+                user.getFirstName() == null ||
+                user.getLastName()== null ||
+                user.getEmail() == null ||
+                user.getCreatedAt() == null){
+            throw new BadRequestException("User is missing required fields:"+ user);
+        }
     }
 }

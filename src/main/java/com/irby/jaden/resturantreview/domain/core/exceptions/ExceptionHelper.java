@@ -7,23 +7,22 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 
 @ControllerAdvice
 public class ExceptionHelper {
-    @ExceptionHandler(ResturantException.class)
-    public ResponseEntity<String> handleResturantException(ResturantException ex) {
+    @ExceptionHandler(ResturantNotFoundException.class)
+    public ResponseEntity<String> handleResturantNotFoundException(ResturantNotFoundException ex) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
     }
 
-    @ExceptionHandler(ReviewExecption.class)
-    public ResponseEntity<String> handleReviewExecption(ReviewExecption ex) {
+    @ExceptionHandler(ReviewNotFoundExecption.class)
+    public ResponseEntity<String> handleReviewNotFoundExecption(ReviewNotFoundExecption ex) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
+    }
+
+    @ExceptionHandler(UserNotFoundException.class)
+    public ResponseEntity<String> handleUserNotFoundExecption(UserNotFoundException ex) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
+    }
+    @ExceptionHandler(BadRequestException.class)
+    public ResponseEntity<String> handleBadRequestExecption(BadRequestException ex) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
-    }
-
-    @ExceptionHandler(UserExecption.class)
-    public ResponseEntity<String> handleUserExecption(UserExecption ex) {
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ex.getMessage());
-    }
-
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<String> handleGenericException() {
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred.");
     }
 }

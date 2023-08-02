@@ -1,19 +1,20 @@
 package com.irby.jaden.resturantreview.domain.core.user.controller;
 
-import com.irby.jaden.resturantreview.domain.core.exceptions.UserExecption;
+import com.irby.jaden.resturantreview.domain.core.BaseController;
+import com.irby.jaden.resturantreview.domain.core.exceptions.BadRequestException;
+import com.irby.jaden.resturantreview.domain.core.exceptions.UserNotFoundException;
 import com.irby.jaden.resturantreview.domain.core.user.model.User;
 import com.irby.jaden.resturantreview.domain.core.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 
 @RestController
 @RequestMapping("/user")
 @CrossOrigin("*")
-public class UserController {
+public class UserController extends BaseController {
 
      private UserService userService;
 
@@ -23,7 +24,7 @@ public class UserController {
      }
 
      @PostMapping("")
-     public ResponseEntity<User> createUser(@RequestBody User user){
+     public ResponseEntity<User> createUser(@RequestBody User user) throws BadRequestException {
          User savedUser = userService.createUser(user);
          return new ResponseEntity<>(savedUser, HttpStatus.CREATED);
      }
@@ -35,20 +36,27 @@ public class UserController {
     }
 
     @GetMapping("{id}")
-    public ResponseEntity<User> getUserById(@RequestParam Long id) throws UserExecption {
-         User user = userService.getUserById(id);
+    public ResponseEntity<User> getUserById(@PathVariable String id) throws UserNotFoundException, BadRequestException {
+         long userId = validateId(id);
+
+         User user = userService.getUserById(userId);
          return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
     @PutMapping("{id}")
-    public ResponseEntity<User> updateUser(@RequestBody User user, @RequestParam Long id) throws UserExecption {
-         User updatedUser = userService.updateUser(id, user);
+    public ResponseEntity<User> updateUser(@RequestBody User user, @PathVariable String id) throws UserNotFoundException, BadRequestException {
+         if(user == null){
+             throw new BadRequestException("Required Fields are missing");
+         }
+        long userId = validateId(id);
+         User updatedUser = userService.updateUser(userId, user);
          return new ResponseEntity<>(updatedUser, HttpStatus.OK);
     }
 
     @DeleteMapping("{id}")
-    public ResponseEntity<Boolean> deleteUser(@RequestParam Long id) throws UserExecption {
-         Boolean result = userService.deleteUser(id);
-         return new ResponseEntity<>(result, HttpStatus.OK);
+    public ResponseEntity<Boolean> deleteUser(@PathVariable  String id) throws UserNotFoundException, BadRequestException {
+        long userId = validateId(id);
+         Boolean result = userService.deleteUser(userId);
+         return new ResponseEntity<>(result, HttpStatus.NO_CONTENT);
     }
 }

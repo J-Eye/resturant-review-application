@@ -15,7 +15,7 @@ public class Review {
 
     private String content;
 
-    private int rating;
+    private int rating =-1;
 
     @ManyToOne
     @JsonBackReference

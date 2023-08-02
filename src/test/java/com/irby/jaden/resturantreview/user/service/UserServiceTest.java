@@ -1,6 +1,7 @@
 package com.irby.jaden.resturantreview.user.service;
 
-import com.irby.jaden.resturantreview.domain.core.exceptions.UserExecption;
+import com.irby.jaden.resturantreview.domain.core.exceptions.BadRequestException;
+import com.irby.jaden.resturantreview.domain.core.exceptions.UserNotFoundException;
 import com.irby.jaden.resturantreview.domain.core.user.model.User;
 import com.irby.jaden.resturantreview.domain.core.user.repo.UserRepo;
 import com.irby.jaden.resturantreview.domain.core.user.service.UserServiceImpl;
@@ -48,14 +49,14 @@ public class UserServiceTest {
     }
 
     @Test
-    public void createUserTestSuccess(){
+    public void createUserTestSuccess() throws BadRequestException {
         BDDMockito.doReturn(mockResponseUser1).when(mockUserRepo).save(ArgumentMatchers.any());
         User returnedUser = userService.createUser(inputUser);
         Assertions.assertNotNull(returnedUser, "User Should not be null");
         Assertions.assertEquals(returnedUser.getId(), 1);
     }
     @Test
-    public void getUserByIdSuccess() throws UserExecption {
+    public void getUserByIdSuccess() throws UserNotFoundException {
         BDDMockito.doReturn(Optional.of(mockResponseUser1)).when(mockUserRepo).findById(1L);
         User foundUser = userService.getUserById(1L);
         Assertions.assertEquals(mockResponseUser1.toString(), foundUser.toString());
@@ -64,7 +65,7 @@ public class UserServiceTest {
     @Test
     public void getUserByIdFailed(){
         BDDMockito.doReturn(Optional.empty()).when(mockUserRepo).findById(1L);
-        Assertions.assertThrows(UserExecption.class, () ->{
+        Assertions.assertThrows(UserNotFoundException.class, () ->{
             userService.getUserById(1L);
         });
 
@@ -81,7 +82,7 @@ public class UserServiceTest {
         Assertions.assertIterableEquals(userList, responseUsers);
     }
     @Test
-    public void updateUserSuccess() throws UserExecption {
+    public void updateUserSuccess() throws UserNotFoundException, BadRequestException {
 
         User execptedUser = new User("Joe", "Boat", "example", date, "J@example.com" );
         BDDMockito.doReturn(Optional.of(mockResponseUser1)).when(mockUserRepo).findById(1L);
@@ -98,13 +99,13 @@ public class UserServiceTest {
 
         User execptedUser = new User("Joe", "Boat", "example", date, "J@example.com" );
         BDDMockito.doReturn(Optional.empty()).when(mockUserRepo).findById(1L);
-        Assertions.assertThrows(UserExecption.class, () ->{
+        Assertions.assertThrows(UserNotFoundException.class, () ->{
             userService.updateUser(1L, execptedUser);
         });
     }
 
     @Test
-    public void deleteUserSuccess() throws UserExecption {
+    public void deleteUserSuccess() throws UserNotFoundException {
         BDDMockito.doReturn(Optional.of(mockResponseUser1)).when(mockUserRepo).findById(1L);
         Boolean actualResponse = userService.deleteUser(1L);
         Assertions.assertTrue(actualResponse);
@@ -113,7 +114,7 @@ public class UserServiceTest {
     @Test
     public void deleteUserFail(){
         BDDMockito.doReturn(Optional.empty()).when(mockUserRepo).findById(1L);
-        Assertions.assertThrows(UserExecption.class, () -> {
+        Assertions.assertThrows(UserNotFoundException.class, () -> {
             userService.deleteUser(1L);
         });
     }
