@@ -56,6 +56,12 @@ public class ReviewServiceImpl implements ReviewService{
 
     }
 
+    @Override
+    public Review getReviewById(Long id) throws ReviewNotFoundExecption {
+        Review review = findReview(id);
+        return review;
+    }
+
 
     private Review findReview(Long id) throws ReviewNotFoundExecption {
         Optional<Review> reviewOptional = reviewRepo.findById(id);

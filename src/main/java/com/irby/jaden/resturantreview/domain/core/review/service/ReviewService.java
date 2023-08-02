@@ -14,4 +14,5 @@ public interface ReviewService {
     Review createReview(Review review) throws BadRequestException;
     Review updateReview(Long reviewId, Review review) throws ReviewNotFoundExecption, BadRequestException;
     Boolean deleteReview(Long id) throws ReviewNotFoundExecption;
+    Review getReviewById(Long id) throws ReviewNotFoundExecption;
 }

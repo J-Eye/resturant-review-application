@@ -1,7 +1,6 @@
 package com.irby.jaden.resturantreview.user.controller;
 
 import com.irby.jaden.resturantreview.BaseControllerTest;
-import com.irby.jaden.resturantreview.domain.core.exceptions.BadRequestException;
 import com.irby.jaden.resturantreview.domain.core.exceptions.UserNotFoundException;
 import com.irby.jaden.resturantreview.domain.core.user.controller.UserController;
 import com.irby.jaden.resturantreview.domain.core.user.model.User;
@@ -16,7 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
@@ -44,28 +42,22 @@ public class UserControllerTest extends BaseControllerTest {
     private MockMvc mockMvc;
 
     private User inputUser;
-    private User mockResponseUser1;
-    private User mockResponseUser2;
-
-    private Date date;
+    private User mockResponseUser;
 
     @BeforeEach
     public void setUp() throws ParseException {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        date = sdf.parse("2022-01-15 12:30:45");
+        Date date = sdf.parse("2022-01-15 12:30:45");
 
         inputUser = new User("John", "Doe","JonDoe123", date,"Jon@Doe.com");
 
-        mockResponseUser1 = new User();
-        mockResponseUser1.setId(1);
-
-        mockResponseUser2 = new User();
-        mockResponseUser2.setId(2);
+        mockResponseUser = new User();
+        mockResponseUser.setId(1);
     }
 
     @Test
     public void createUserSuccess() throws Exception {
-        BDDMockito.doReturn(mockResponseUser1).when(mockUserService).createUser(ArgumentMatchers.any());
+        BDDMockito.doReturn(mockResponseUser).when(mockUserService).createUser(ArgumentMatchers.any());
 
         mockMvc.perform(MockMvcRequestBuilders.post("/user")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -79,7 +71,7 @@ public class UserControllerTest extends BaseControllerTest {
 
     @Test
     public void getUsersByIdTestSuccess() throws Exception {
-        BDDMockito.doReturn(mockResponseUser1).when(mockUserService).getUserById(ArgumentMatchers.any());
+        BDDMockito.doReturn(mockResponseUser).when(mockUserService).getUserById(ArgumentMatchers.any());
 
         mockMvc.perform(MockMvcRequestBuilders.get("/user/{id}",1L))
                 .andExpect(MockMvcResultMatchers.status().isOk())
@@ -98,7 +90,7 @@ public class UserControllerTest extends BaseControllerTest {
 
     @Test
     public void updateUserSuccess() throws Exception {
-        BDDMockito.doReturn(mockResponseUser1).when(mockUserService).updateUser(ArgumentMatchers.any(), ArgumentMatchers.any());
+        BDDMockito.doReturn(mockResponseUser).when(mockUserService).updateUser(ArgumentMatchers.any(), ArgumentMatchers.any());
         inputUser.setId(1);
 
         mockMvc.perform(MockMvcRequestBuilders.put("/user/{id}",1L)

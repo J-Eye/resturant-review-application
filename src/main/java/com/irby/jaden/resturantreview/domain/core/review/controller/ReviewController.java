@@ -45,6 +45,12 @@ public class ReviewController extends BaseController {
         Boolean result = reviewService.deleteReview(reviewId);
         return new ResponseEntity<>(result, HttpStatus.NO_CONTENT);
     }
+    @GetMapping("{id}")
+    public ResponseEntity<Review> getReviewById(@PathVariable String id) throws BadRequestException, ReviewNotFoundExecption {
+        long reviewId = validateId(id);
+        Review updateReview = reviewService.getReviewById(reviewId);
+        return new ResponseEntity<>(updateReview, HttpStatus.OK);
+    }
 
 
 

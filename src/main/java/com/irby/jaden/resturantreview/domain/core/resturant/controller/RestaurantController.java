@@ -8,6 +8,7 @@ import com.irby.jaden.resturantreview.domain.core.resturant.service.RestaurantSe
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.lang.NonNull;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -25,7 +26,7 @@ public class RestaurantController extends BaseController {
     }
 
     @PostMapping("")
-    public ResponseEntity<Restaurant> createRestaurant(@RequestBody Restaurant restaurant) throws BadRequestException {
+    public ResponseEntity<Restaurant> createRestaurant(@RequestBody @NonNull Restaurant restaurant) throws BadRequestException {
         Restaurant savedRestaurant = restaurantService.createRestaurant(restaurant);
         return new ResponseEntity<>(savedRestaurant, HttpStatus.CREATED);
     }
@@ -44,7 +45,7 @@ public class RestaurantController extends BaseController {
     }
 
     @PutMapping("{id}")
-    public ResponseEntity<Restaurant> updateRestaurant(@RequestBody Restaurant restaurant, @PathVariable String id) throws ResturantNotFoundException, BadRequestException {
+    public ResponseEntity<Restaurant> updateRestaurant(@RequestBody @NonNull Restaurant restaurant, @PathVariable String id) throws ResturantNotFoundException, BadRequestException {
         long restaurantId = validateId(id);
 
         Restaurant updatedRestaurant = restaurantService.updateRestaurant(restaurantId, restaurant);

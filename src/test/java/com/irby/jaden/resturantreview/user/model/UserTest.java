@@ -17,13 +17,10 @@ public class UserTest {
 
     private User user;
 
-    private User emptyUser;
-
     private Date date;
 
     @BeforeEach
     public void setUp() throws ParseException {
-        emptyUser = new User();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         date = sdf.parse("2022-01-15 12:30:45");
         user = new User("John", "Doe","JonDoe123", date,"Jon@Doe.com");

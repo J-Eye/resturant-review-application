@@ -8,6 +8,7 @@ import com.irby.jaden.resturantreview.domain.core.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.lang.NonNull;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
@@ -24,7 +25,7 @@ public class UserController extends BaseController {
      }
 
      @PostMapping("")
-     public ResponseEntity<User> createUser(@RequestBody User user) throws BadRequestException {
+     public ResponseEntity<User> createUser(@RequestBody @NonNull User user) throws BadRequestException {
          User savedUser = userService.createUser(user);
          return new ResponseEntity<>(savedUser, HttpStatus.CREATED);
      }
@@ -44,17 +45,14 @@ public class UserController extends BaseController {
     }
 
     @PutMapping("{id}")
-    public ResponseEntity<User> updateUser(@RequestBody User user, @PathVariable String id) throws UserNotFoundException, BadRequestException {
-         if(user == null){
-             throw new BadRequestException("Required Fields are missing");
-         }
+    public ResponseEntity<User> updateUser(@RequestBody @NonNull User user, @PathVariable String id) throws UserNotFoundException, BadRequestException {
         long userId = validateId(id);
          User updatedUser = userService.updateUser(userId, user);
          return new ResponseEntity<>(updatedUser, HttpStatus.OK);
     }
 
     @DeleteMapping("{id}")
-    public ResponseEntity<Boolean> deleteUser(@PathVariable  String id) throws UserNotFoundException, BadRequestException {
+    public ResponseEntity<Boolean> deleteUser(@PathVariable String id) throws UserNotFoundException, BadRequestException {
         long userId = validateId(id);
          Boolean result = userService.deleteUser(userId);
          return new ResponseEntity<>(result, HttpStatus.NO_CONTENT);
