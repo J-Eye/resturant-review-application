@@ -2,7 +2,6 @@ package com.irby.jaden.resturantreview.review.controller;
 
 import com.irby.jaden.resturantreview.BaseControllerTest;
 import com.irby.jaden.resturantreview.domain.core.exceptions.ReviewNotFoundExecption;
-import com.irby.jaden.resturantreview.domain.core.exceptions.UserNotFoundException;
 import com.irby.jaden.resturantreview.domain.core.resturant.model.Restaurant;
 import com.irby.jaden.resturantreview.domain.core.review.controller.ReviewController;
 import com.irby.jaden.resturantreview.domain.core.review.model.Review;
@@ -24,8 +23,6 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
-
-import java.util.Date;
 
 @SpringBootTest
 @AutoConfigureMockMvc

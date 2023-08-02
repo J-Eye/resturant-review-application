@@ -56,7 +56,7 @@ public class RestaurantController extends BaseController {
     public ResponseEntity<Boolean> deleteRestaurant(@PathVariable String id) throws ResturantNotFoundException, BadRequestException {
         long restaurantId = validateId(id);
         Boolean result = restaurantService.deleteRestaurant(restaurantId);
-        return new ResponseEntity<>(result, HttpStatus.OK);
+        return new ResponseEntity<>(result, HttpStatus.NO_CONTENT);
     }
 
 

@@ -2,12 +2,9 @@ package com.irby.jaden.resturantreview.domain.core.review.controller;
 
 import com.irby.jaden.resturantreview.domain.core.BaseController;
 import com.irby.jaden.resturantreview.domain.core.exceptions.BadRequestException;
-import com.irby.jaden.resturantreview.domain.core.exceptions.ResturantNotFoundException;
 import com.irby.jaden.resturantreview.domain.core.exceptions.ReviewNotFoundExecption;
-import com.irby.jaden.resturantreview.domain.core.exceptions.UserNotFoundException;
 import com.irby.jaden.resturantreview.domain.core.review.model.Review;
 import com.irby.jaden.resturantreview.domain.core.review.service.ReviewService;
-import com.irby.jaden.resturantreview.domain.core.user.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
